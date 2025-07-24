@@ -1,0 +1,23 @@
+services:
+  reservations:
+    build:
+      context: .
+      dockerfile: ./apps/reservations/Dockerfile
+      target: development
+    command: pnpm run start:dev
+    ports:
+      - '3000:3000'
+    volumes:
+      # Monter le code source mais EXCLURE node_modules
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/dist
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/sleepr
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    ports:
+      - '27017:27017'
